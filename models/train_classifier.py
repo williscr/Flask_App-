@@ -38,6 +38,7 @@ def tokenize(text):
     lemmatizer = WordNetLemmatizer() 
     
     clean_tokens = [] 
+    
     for token in tokenize : 
         clean_token = lemmatizer.lemmatize(token).lower().strip() 
         clean_tokens.append(clean_token)

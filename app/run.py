@@ -7,7 +7,7 @@ from nltk.tokenize import word_tokenize
 
 from flask import Flask
 from flask import render_template, request, jsonify
-from plotly.graph_objs import Bar
+from plotly.graph_objs import Bar,Pie
 from sklearn.externals import joblib
 from sqlalchemy import create_engine
 
@@ -43,28 +43,55 @@ def index():
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
     
+    cat_names = df.iloc[:,4:].columns
+    cat_values = (df.iloc[:,4:] != 0).sum().values
+
+    
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
     graphs = [
         {
+           'data': [
+                    Pie(
+                        labels=genre_names,
+                        values=genre_counts,
+                        rotation=180,
+                        marker=dict(colors=['purple', 'pink', 'blue', 'red'],
+                        line=dict(color='#000000', width=2))
+                    )
+                ],
+
+                'layout': {
+                    'title': 'Pie Chart Showing Genres Distribution',
+                    'height': 450,
+                    'width': 600,
+                    'legend': dict(yanchor="top",y=0.99,xanchor="left",x=0.1),
+                    'margin': dict(l=50)
+                }
+         },
+        {
             'data': [
                 Bar(
-                    x=genre_names,
-                    y=genre_counts
+                    x= cat_names,
+                    y = cat_values
                 )
             ],
 
             'layout': {
-                'title': 'Distribution of Message Genres',
+                'title': 'Bar Chat Showing Distribution of Categories',
                 'yaxis': {
                     'title': "Count"
                 },
                 'xaxis': {
-                    'title': "Genre"
+                    'title': "Category",
+                    'tickangle': 90
                 }
             }
         }
     ]
+
+
+ 
     
     # encode plotly graphs in JSON
     ids = ["graph-{}".format(i) for i, _ in enumerate(graphs)]
