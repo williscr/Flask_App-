@@ -2,6 +2,7 @@ import sys
 import pickle 
 import pandas as pd 
 import numpy as np
+<<<<<<< HEAD
 import re
 import os
 
@@ -9,10 +10,16 @@ from sqlalchemy import create_engine
 
 from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score
 from sklearn.pipeline import Pipeline , FeatureUnion
+=======
+
+from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score
+from sklearn.pipeline import Pipeline
+>>>>>>> d67a6f7d145b5b71947df395dd5a249efcfea9e4
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer, TfidfVectorizer
 from sklearn.metrics import f1_score, classification_report, make_scorer
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.ensemble import RandomForestClassifier
+<<<<<<< HEAD
 from sklearn.base import BaseEstimator, TransformerMixin
 
 import nltk 
@@ -34,6 +41,22 @@ def load_data(database_filepath, table_name = 'MessageCategories'):
     engine = create_engine('sqlite:///' + database_filepath)
     text_df = pd.read_sql_table(table_name,engine)
     print(text_df.columns)
+=======
+
+
+from sqlalchemy import create_engine
+
+import nltk 
+from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
+nltk.download(['punkt','stopwords','wordnet'])
+
+def load_data(database_filepath):
+    engine = create_engine(f'sqlite:///{database_filepath}')
+    table = database_filepath.split('/')[-1].split('.')[0]
+
+    text_df = pd.read_sql_table(table,con=engine)
+>>>>>>> d67a6f7d145b5b71947df395dd5a249efcfea9e4
     
     X= text_df['message']
     Y = text_df.iloc[:,4:]
@@ -42,6 +65,7 @@ def load_data(database_filepath, table_name = 'MessageCategories'):
 
 
 
+<<<<<<< HEAD
 
 def tokenize(text):
     '''
@@ -55,6 +79,9 @@ def tokenize(text):
     ''' 
     #Remove stop words 
     #stop_words = stopwords.words("english")
+=======
+def tokenize(text):
+>>>>>>> d67a6f7d145b5b71947df395dd5a249efcfea9e4
     
     tokenize = word_tokenize(text); 
     # Clean the data 
@@ -68,6 +95,7 @@ def tokenize(text):
     
     return clean_tokens
 
+<<<<<<< HEAD
 # Build a custom transformer which will extract the starting verb of a sentence
 class StartingVerbExtractor(BaseEstimator, TransformerMixin):
     """
@@ -120,6 +148,20 @@ def build_model():
     parameters = {
       'features__txt_pipe__tfidf__use_idf': (True, False)
        #'clf__estimator__n_estimators': [10, 50, 100]
+=======
+def build_model():
+    
+
+    pipeline = Pipeline([
+        ('vectorise',CountVectorizer(tokenizer = tokenize)), 
+        ('tfidf', TfidfTransformer()),
+        ('clf',MultiOutputClassifier(RandomForestClassifier(random_state = 42)))
+    ])
+
+
+    parameters = {
+        'tfidf__use_idf': (True, False)
+>>>>>>> d67a6f7d145b5b71947df395dd5a249efcfea9e4
     }
 
     cv = GridSearchCV(pipeline, param_grid=parameters)
@@ -128,6 +170,7 @@ def build_model():
 
 
 def evaluate_model(model, X_test, Y_test):
+<<<<<<< HEAD
     '''
     Calls classification report on the model returning the F1 score, recall and precision. 
     INPUT: 
@@ -135,6 +178,8 @@ def evaluate_model(model, X_test, Y_test):
     X_test : Test independent variable 
     Y_test : Test dependent variables 
     '''
+=======
+>>>>>>> d67a6f7d145b5b71947df395dd5a249efcfea9e4
     y_pred = model.predict(X_test)
     for idx, col in enumerate(Y_test):
         print(col, classification_report(Y_test.iloc[:,idx], y_pred[:,idx]))
@@ -142,12 +187,15 @@ def evaluate_model(model, X_test, Y_test):
   
 
 def save_model(model, model_filepath):
+<<<<<<< HEAD
     ''' 
     Export model as a pickle file
     INPUT: 
     model: The model you want to export
     model_filepath : Location of the model 
     ''' 
+=======
+>>>>>>> d67a6f7d145b5b71947df395dd5a249efcfea9e4
     
     with open(model_filepath, 'wb') as f:
         pickle.dump(model, f)

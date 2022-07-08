@@ -2,6 +2,7 @@ import json
 import plotly
 import pandas as pd
 
+<<<<<<< HEAD
 import nltk 
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
@@ -9,12 +10,19 @@ from nltk.stem import WordNetLemmatizer
 nltk.download(['punkt','stopwords','wordnet','averaged_perceptron_tagger'])
 
 from sklearn.base import BaseEstimator, TransformerMixin
+=======
+from nltk.stem import WordNetLemmatizer
+from nltk.tokenize import word_tokenize
+>>>>>>> d67a6f7d145b5b71947df395dd5a249efcfea9e4
 
 from flask import Flask
 from flask import render_template, request, jsonify
 from plotly.graph_objs import Bar,Pie
 from sklearn.externals import joblib
+<<<<<<< HEAD
 from sklearn.base import BaseEstimator, TransformerMixin
+=======
+>>>>>>> d67a6f7d145b5b71947df395dd5a249efcfea9e4
 from sqlalchemy import create_engine
 
 
@@ -31,6 +39,7 @@ def tokenize(text):
 
     return clean_tokens
 
+<<<<<<< HEAD
 class StartingVerbExtractor(BaseEstimator, TransformerMixin):
     """
     Starting Verb Extractor class
@@ -60,6 +69,11 @@ class StartingVerbExtractor(BaseEstimator, TransformerMixin):
 # load data
 engine = create_engine('sqlite:///../data/DisasterResponse.db')
 df = pd.read_sql_table('MessageCategories', engine)
+=======
+# load data
+engine = create_engine('sqlite:///../data/DisasterResponse.db')
+df = pd.read_sql_table('DisasterResponse', engine)
+>>>>>>> d67a6f7d145b5b71947df395dd5a249efcfea9e4
 
 # load model
 model = joblib.load("../models/classifier.pkl")
