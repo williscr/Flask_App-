@@ -45,6 +45,8 @@ def clean_data(df):
     df.drop_duplicates()
     df.drop(['categories'],axis = 1, inplace = True)
     df = pd.concat([df,categories],axis = 1)
+    df.drop(['related'] , axis = 1 , inplace = True) 
+
 
     return df
 
