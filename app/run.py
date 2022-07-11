@@ -2,7 +2,6 @@ import json
 import plotly
 import pandas as pd
 
-<<<<<<< HEAD
 import nltk 
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
@@ -10,25 +9,25 @@ from nltk.stem import WordNetLemmatizer
 nltk.download(['punkt','stopwords','wordnet','averaged_perceptron_tagger'])
 
 from sklearn.base import BaseEstimator, TransformerMixin
-=======
-from nltk.stem import WordNetLemmatizer
-from nltk.tokenize import word_tokenize
->>>>>>> d67a6f7d145b5b71947df395dd5a249efcfea9e4
 
 from flask import Flask
 from flask import render_template, request, jsonify
 from plotly.graph_objs import Bar,Pie
 from sklearn.externals import joblib
-<<<<<<< HEAD
 from sklearn.base import BaseEstimator, TransformerMixin
-=======
->>>>>>> d67a6f7d145b5b71947df395dd5a249efcfea9e4
 from sqlalchemy import create_engine
 
 
 app = Flask(__name__)
 
 def tokenize(text):
+        '''
+    Function to clean and tokenize textual data
+    INPUT 
+    text: Textual input 
+    OUTPUT : 
+    clean_tokenized : Tokenized text data 
+    ''' 
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
 
@@ -39,7 +38,6 @@ def tokenize(text):
 
     return clean_tokens
 
-<<<<<<< HEAD
 class StartingVerbExtractor(BaseEstimator, TransformerMixin):
     """
     Starting Verb Extractor class
@@ -64,16 +62,11 @@ class StartingVerbExtractor(BaseEstimator, TransformerMixin):
     def transform(self, X):
         X_tagged = pd.Series(X).apply(self.starting_verb)
         return pd.DataFrame(X_tagged)
-    
+
 
 # load data
 engine = create_engine('sqlite:///../data/DisasterResponse.db')
 df = pd.read_sql_table('MessageCategories', engine)
-=======
-# load data
-engine = create_engine('sqlite:///../data/DisasterResponse.db')
-df = pd.read_sql_table('DisasterResponse', engine)
->>>>>>> d67a6f7d145b5b71947df395dd5a249efcfea9e4
 
 # load model
 model = joblib.load("../models/classifier.pkl")
@@ -83,18 +76,15 @@ model = joblib.load("../models/classifier.pkl")
 @app.route('/')
 @app.route('/index')
 def index():
-    
-    # extract data needed for visuals
-    # TODO: Below is an example - modify to extract data for your own visuals
+
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
-    
+
     cat_names = df.iloc[:,4:].columns
     cat_values = (df.iloc[:,4:] != 0).sum().values
 
-    
+
     # create visuals
-    # TODO: Below is an example - modify to create your own visuals
     graphs = [
         {
            'data': [
@@ -137,12 +127,12 @@ def index():
     ]
 
 
- 
-    
+
+
     # encode plotly graphs in JSON
     ids = ["graph-{}".format(i) for i, _ in enumerate(graphs)]
     graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
-    
+
     # render web page with plotly graphs
     return render_template('master.html', ids=ids, graphJSON=graphJSON)
 
@@ -170,4 +160,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    main() 
